@@ -1,0 +1,86 @@
+---
+  - name: Instalar python
+    apt: pkg=python-simplejson state=installed update_cache=true
+
+  - debconf:
+      name: slapd
+      question: "{{ item }}"
+      value: "{{ slapd_root_password }}"
+      vtype: "password"
+    with_items:
+      - slapd/root_password
+      - slapd/root_password_again
+      - slapd/internal/adminpw password
+      - slapd/internal/generated_adminpw
+      - slapd/password1
+      - slapd/password2
+
+  - debconf:
+      name: slapd
+      question: slapd/domain
+      value: "{{ slapd_domain | default(ansible_fqdn) }}"
+      vtype: "string"
+
+  - debconf:
+      name: slapd
+      question: slapd/organization
+      value: "{{ slapd_organization }}"
+      vtype: "string"
+
+  - debconf:
+      name: slapd
+      question: slapd/backend
+      value: "MDB"
+      vtype: "string"
+
+  - debconf:
+      name: slapd
+      question: slapd/purge_database
+      value: false
+      vtype: boolean
+
+  - debconf:
+      name: slapd
+      question: slapd/allow_ldap_v2
+      value: false
+      vtype: boolean
+
+  - debconf:
+      name: slapd
+      question: slapd/no_configuration
+      value: false
+      vtype: boolean
+
+  - debconf:
+      name: slapd
+      question: slapd/move_old_database
+      value: true
+      vtype: boolean
+
+  - debconf:
+      name: slapd
+      question: slapd/dump_database
+      value: 'when needed'
+      vtype: select
+
+  - debconf:
+      name: slapd
+      question: slapd/dump_database_destdir
+      value: "/var/backups/slapd-VERSION"
+      vtype: string
+
+  - name: Install the openldap and required Packages for Ubuntu
+    apt: name={{ item }} state=installed update_cache=yes
+    with_items: "{{ openldap_server_pkgs }}"
+
+  - name: Copiando fichero de unidades organizativas
+    copy: src=../templates/crearou.ldif dest=/root/ owner=root group=root mode=0644
+
+  - name: Copiando fichero de usuarios
+    copy: src=../templates/crearusuarios.ldif dest=/root/ owner=root group=root mode=0644
+
+  - name: Creando unidades organizativas
+    shell: /usr/bin/ldapadd -x -D "cn=admin,dc=jacaranda,dc=local" -w "{{ slapd_root_password }}" -f /root/crearou.ldif
+
+  - name: Creando usuarios
+    shell: /usr/bin/ldapadd -x -D "cn=admin,dc=jacaranda,dc=local" -w "{{ slapd_root_password }}" -f /root/crearusuarios.ldif

@@ -1,0 +1,11 @@
+---
+
+openldap_server_pkgs:
+  - slapd
+  - ldap-utils
+  - python-selinux
+  - openssl
+
+slapd_root_password: "super"
+slapd_domain: "jacaranda.local"
+slapd_organization: "DC=jacaranda,DC=local"

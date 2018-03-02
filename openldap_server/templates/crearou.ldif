@@ -1,0 +1,9 @@
+dn: ou=profesores,dc=jacaranda,dc=local
+ou: profesores
+description: Profesores
+objectclass: organizationalunit
+
+dn: ou=alumnos,dc=jacaranda,dc=local
+ou: alumnos
+description: Alumnos
+objectclass: organizationalunit

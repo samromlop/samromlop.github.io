@@ -1,0 +1,25 @@
+dn: uid=joadelvia,ou=profesores,dc=jacaranda,dc=local
+uid: joadelvia
+cn: Joaquin
+sn: Delhom
+objectclass: top
+objectclass: person
+objectclass: posixaccount
+loginshell: /bin/bash
+uidnumber: 2001
+gidnumber: 2001
+homedirectory: /home/joadelvia
+userpassword: contrasena1
+
+dn: uid=samromlop,ou=profesores,dc=jacaranda,dc=local
+uid: samromlop
+cn: Samuel
+sn: Romera
+objectclass: top
+objectclass: person
+objectclass: posixaccount
+loginshell: /bin/bash
+uidnumber: 2002
+gidnumber: 2002
+homedirectory: /home/samromlop
+userpassword: contrasena2
